@@ -1,0 +1,89 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<title></title>
+</head>
+<body>
+    <p>Random Generated Words Display Here:</p><br>
+	<div id="whatever"></div><br><br>
+	
+	How many random words you want to generate? : <input type="text" value="5" id="num"> <br><br><br>
+    Length of word generation : <input type="text"  id="lengthword"><br><br><br>
+    Query word (sepedify with ?) : <input type="text" value ="?" id="query"><br><br><br>
+    <input type="submit" id="new" value="Generate random word and show count accordingly Query word">
+    <p class ="result"></p>
+
+
+</body>
+</html>
+
+
+
+<script>
+$(document).ready(function(){
+  var counter;
+
+  //Function to generate random words
+ function createRandomWord(length) {
+    var consonants = 'abcdefhiyjkt',
+        vowels = 'aeiou',
+        rand = function(limit) {
+            return Math.floor(Math.random()*limit);
+        },
+        i, word='', length = parseInt(length,10),
+        consonants = consonants.split(''),
+        vowels = vowels.split('');
+    for (i=0;i<length/2;i++) {
+        var randConsonant = consonants[rand(consonants.length)],
+            randVowel = vowels[rand(vowels.length)];
+        word += (i===0) ? randConsonant.toLowerCase() : randConsonant;
+        word += i*2<length-1 ? randVowel : '';
+    }
+    return word;
+}
+
+//to count index specify word
+var sampleinputs =  [];
+ $("#new").click(function(){
+ 	sampleinputs.length = 0
+ 	var counter = 0;
+
+    $("#whatever").text('');
+     //var regex2 = new RegExp('?','i');replace(/\?/, "")
+     var query = $("#query").val().split('?');
+     var query_word;
+     var query_index;
+      $.each(query, function( index, value ) { 
+      if (value != ''){
+      	query_index = index;
+        query_word = value;
+      }
+    });
+    // alert(query_word);
+    // console.log(query);
+    var regex = new RegExp(query_word,'i');
+    for(var p = 0; p < $("#num").val(); p++){ 
+     var str = createRandomWord($("#lengthword").val()); 
+     var searched = str.match(regex);
+     if(searched != null){
+      sampleinputs.push(searched);
+     }
+     //var pos = str.charAt(0); alert(pos);  
+        $("#whatever").append(str+'<br/>');
+    }
+    
+ $.each(sampleinputs, function( index, value ) { 
+ 	var n = value['input'].indexOf(value[0]);
+ 	if( n == query_index){
+      counter = counter + 1;
+ 	}
+ });
+ $('.result').text('We Have ' +counter+ ' result sets for you.');
+ 
+  });
+  
+});
+</script>
+
+
